@@ -51,7 +51,7 @@ Acesse a documentação interativa:
 
 ## 🛠 Tecnologias Utilizadas
 
-- [VS Code](https://code.visualstudio.com/) | IDE principal com extensões para Angular, ESLint e Debugging
+- [VS Code](https://code.visualstudio.com/) | IDE principal com extensões para Java
 - [Git Bash](https://git-scm.com/downloads) | Terminal otimizado para controle de versionamento com Git
 
 

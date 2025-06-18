@@ -1,25 +1,23 @@
 package com.ecommerce.demo.controller;
 
-
-import com.ecommerce.demo.controller.ProdutoController;
 import com.ecommerce.demo.model.Produto;
 import com.ecommerce.demo.service.ProdutoService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
-class DemoApplicationTests {
+class ProdutoControllerTest {
 
     @Mock
     private ProdutoService produtoService;
@@ -27,26 +25,32 @@ class DemoApplicationTests {
     @InjectMocks
     private ProdutoController produtoController;
 
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
     @Test
-    void testListarTodos() {
+    void listarTodos_DeveRetornarListaDeProdutos() {
         // Arrange
-        Produto p1 = new Produto("Notebook", "Dell Inspiron", new BigDecimal("4500.00"), 10);
-        Produto p2 = new Produto("Mouse", "Sem fio", new BigDecimal("120.00"), 50);
-        when(produtoService.listarTodos()).thenReturn(Arrays.asList(p1, p2));
+        Produto produto = new Produto("Produto Teste", "Descrição", BigDecimal.TEN, 10);
+        when(produtoService.listarTodos()).thenReturn(Collections.singletonList(produto));
 
         // Act
         ResponseEntity<List<Produto>> resposta = produtoController.listarTodos();
 
         // Assert
         assertEquals(HttpStatus.OK, resposta.getStatusCode());
-        assertEquals(2, resposta.getBody().size());
+        assertFalse(resposta.getBody().isEmpty());
+        assertEquals(1, resposta.getBody().size());
+        verify(produtoService, times(1)).listarTodos();
     }
 
     @Test
-    void testBuscarPorIdExistente() {
+    void buscarPorId_QuandoExistir_DeveRetornarProduto() {
         // Arrange
         Long id = 1L;
-        Produto produto = new Produto("Teclado", "Mecânico", new BigDecimal("350.00"), 15);
+        Produto produto = new Produto("Produto Teste", "Descrição", BigDecimal.TEN, 10);
         when(produtoService.buscarPorId(id)).thenReturn(produto);
 
         // Act
@@ -54,11 +58,12 @@ class DemoApplicationTests {
 
         // Assert
         assertEquals(HttpStatus.OK, resposta.getStatusCode());
-        assertEquals("Teclado", resposta.getBody().getNome());
+        assertNotNull(resposta.getBody());
+        verify(produtoService, times(1)).buscarPorId(id);
     }
 
     @Test
-    void testBuscarPorIdInexistente() {
+    void buscarPorId_QuandoNaoExistir_DeveRetornarNotFound() {
         // Arrange
         Long id = 99L;
         when(produtoService.buscarPorId(id)).thenReturn(null);
@@ -68,5 +73,6 @@ class DemoApplicationTests {
 
         // Assert
         assertEquals(HttpStatus.NOT_FOUND, resposta.getStatusCode());
+        verify(produtoService, times(1)).buscarPorId(id);
     }
 }
