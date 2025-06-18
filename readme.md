@@ -56,3 +56,9 @@ Acesse a documentação interativa:
 
 
 ---
+
+## 📄 Licença
+
+MIT License - Veja o arquivo LICENSE para detalhes.
+
+<div align="center"> Desenvolvido por Eduardo </div> 
